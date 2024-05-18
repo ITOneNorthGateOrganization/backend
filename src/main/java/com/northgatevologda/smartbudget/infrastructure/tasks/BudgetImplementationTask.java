@@ -16,8 +16,12 @@ public class BudgetImplementationTask {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void executeScheduledTask() {
-        logger.info("Starting execution of scheduled task");
-        budgetService.implementSuitableBudgets();
-        logger.info("Scheduled task execution completed");
+        try {
+            logger.info("Starting execution of scheduled task");
+            budgetService.implementSuitableBudgets();
+            logger.info("Scheduled task execution completed");
+        } catch (Exception e) {
+            logger.error("An error occurred while completing the task", e);
+        }
     }
 }
