@@ -1,3 +1,8 @@
+smartbudget:
+  app:
+    jwtSecret: YZ0UwB+IYtL5/u3+gATe4uf+FxkhU68yBKKdic0tYxKD7X9wYzGTmf3ZlrftVLNP
+    jwtExpirationMs: 3600000
+    jwtRefreshExpirationMs: 86400000
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -7,8 +12,3 @@ spring:
   jpa:
     hibernate.ddl-auto: create-drop
     show-sql: true
-smartbudget:
-  app:
-    jwtSecret: YZ0UwB+IYtL5/u3+gATe4uf+FxkhU68yBKKdic0tYxKD7X9wYzGTmf3ZlrftVLNP
-    jwtExpirationMs: 3600000
-    jwtRefreshExpirationMs: 86400000
