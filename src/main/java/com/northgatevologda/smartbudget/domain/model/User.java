@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Builder
-@Table(name = "user", schema = "public")
+@Table(name = "\"user\"", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -57,4 +57,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     @Builder.Default
     private List<Category> categories = new ArrayList<>();
+
 }
