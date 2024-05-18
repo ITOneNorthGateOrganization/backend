@@ -23,3 +23,4 @@
 - `JWT_SECRET` - секретный JWT ключ
 - `JWT_EXPIRATION_MS` - время жизни токена JWT
 - `JWT_REFRESH_EXPIRATION_MS` - время жизни refresh токена JWT
+- `LOG_PATH` - путь к файлу для логирования
