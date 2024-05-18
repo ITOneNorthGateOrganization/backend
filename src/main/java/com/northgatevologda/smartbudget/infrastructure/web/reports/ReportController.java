@@ -56,6 +56,7 @@ public class ReportController {
                 endDate.toInstant(),
                 step
             );
+        
         return ResponseEntity.ok(report);
     }
 }
