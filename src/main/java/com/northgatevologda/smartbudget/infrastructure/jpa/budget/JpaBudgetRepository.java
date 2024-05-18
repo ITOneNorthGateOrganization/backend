@@ -12,8 +12,15 @@ import java.util.List;
 @Repository
 public interface JpaBudgetRepository extends JpaRepository<Budget, Long> {
     List<Budget> findBudgetsByUserId(Long userId);
-
     List<Budget> findBudgetsByClose(boolean close);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = """
+        DELETE FROM budget_category WHERE budget_id = :id;
+        DELETE FROM budget WHERE id = :id;
+    """)
+    void deleteBudgetById(Long id);
 
     @Transactional
     @Modifying
