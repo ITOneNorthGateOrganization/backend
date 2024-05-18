@@ -17,27 +17,27 @@ import java.util.stream.Collectors;
 @Component
 public class BudgetProportionsReportMapper {
     public BudgetProportionsReportDTO toBudgetProportionsReportDTO(
-        Instant startDate,
-        Instant endDate,
-        BigDecimal sum,
-        List<BudgetImplementationProjection> projections
+            Instant startDate,
+            Instant endDate,
+            BigDecimal sum,
+            List<BudgetImplementationProjection> projections
     ) {
-        List<BudgetImplementationDTO> budgets = projections.stream().map( projection -> {
+        List<BudgetImplementationDTO> budgets = projections.stream().map(projection -> {
             Double percent = projection.getAmount().multiply(BigDecimal.valueOf(100.0))
-                .divide(sum, 2, RoundingMode.CEILING).doubleValue();
+                    .divide(sum, 2, RoundingMode.CEILING).doubleValue();
             return BudgetImplementationDTO.builder()
-                .id(projection.getId())
-                .purpose(projection.getPurpose())
-                .amount(projection.getAmount())
-                .percent(percent)
-                .build();
+                    .id(projection.getId())
+                    .purpose(projection.getPurpose())
+                    .amount(projection.getAmount())
+                    .percent(percent)
+                    .build();
         }).collect(Collectors.toList());
 
         return BudgetProportionsReportDTO.builder()
-            .startDate(startDate)
-            .endDate(endDate)
-            .amount(sum)
-            .budgets(budgets)
-            .build();
+                .startDate(startDate)
+                .endDate(endDate)
+                .amount(sum)
+                .budgets(budgets)
+                .build();
     }
 }

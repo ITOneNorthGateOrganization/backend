@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface JpaBankrollChangesReportRepository extends JpaRepository<Account, Long> {
     @Query(
-        nativeQuery = true,
-        value = "SELECT transaction_type_id AS transactionTypeId, period_start as periodStart, amount FROM get_bakroll_changes_report(:username, :start_date, :end_date, :step)"
+            nativeQuery = true,
+            value = "SELECT transaction_type_id AS transactionTypeId, period_start as periodStart, amount FROM get_bakroll_changes_report(:username, :start_date, :end_date, :step)"
     )
     List<BankrollChangesReportProjection> getReport(
-        @Param("username") String username,
-        @Param("start_date") String startDate,
-        @Param("end_date") String endDate,
-        @Param("step") BigDecimal step
+            @Param("username") String username,
+            @Param("start_date") String startDate,
+            @Param("end_date") String endDate,
+            @Param("step") BigDecimal step
     );
 }

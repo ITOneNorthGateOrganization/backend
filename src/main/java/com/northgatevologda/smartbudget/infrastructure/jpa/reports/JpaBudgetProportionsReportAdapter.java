@@ -26,17 +26,17 @@ public class JpaBudgetProportionsReportAdapter implements BudgetProportionsRepor
     public List<BudgetImplementationProjection> getReport(String username, Instant startDate, Instant endDate) {
         logger.info("Generating categories report: {} {} {}", username, startDate, endDate);
         return jpaBudgetProportionReportRepository.getReport(
-            username,
-            startDate,
-            endDate);
+                username,
+                startDate,
+                endDate);
     }
 
     @Override
     public BigDecimal getSumImplementation(String username, Instant startDate, Instant endDate) {
         logger.info("Getting sum of budget implementations: {} {} {}", username, startDate, endDate);
         return jpaBudgetProportionReportRepository.getSumImplementation(
-            username,
-            startDate,
-            endDate);
+                username,
+                startDate,
+                endDate);
     }
 }

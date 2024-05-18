@@ -11,6 +11,7 @@ import java.util.List;
 public interface BankrollChangesRepositoryPort {
     /**
      * Return reports about user bankroll changes on accounts.
+     *
      * @param username
      * @param startDate
      * @param endDate

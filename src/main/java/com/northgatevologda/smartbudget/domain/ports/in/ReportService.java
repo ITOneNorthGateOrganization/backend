@@ -23,6 +23,7 @@ public interface ReportService {
 
     /**
      * Returns the sum of bankroll changes on user's account for a time period, divided into intervals with a distance of step
+     *
      * @param username
      * @param startDate
      * @param endDate
@@ -33,6 +34,7 @@ public interface ReportService {
 
     /**
      * Returns the budget implementation percentage report
+     *
      * @param username
      * @param startDate
      * @param endDate

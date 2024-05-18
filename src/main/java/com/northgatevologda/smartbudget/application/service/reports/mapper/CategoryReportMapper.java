@@ -22,10 +22,10 @@ public class CategoryReportMapper {
      * @return the CategorySpendReportDTO object
      */
     public CategorySpendReportDTO toDTO(
-        Instant startDate,
-        Instant endDate,
-        Double step,
-        List<CategoryReportProjection> categoryReports
+            Instant startDate,
+            Instant endDate,
+            Double step,
+            List<CategoryReportProjection> categoryReports
     ) {
         Set<CategoryReportDTO> categories = new HashSet<>();
         Map<Long, List<CategorySpendDTO>> groupedReports = new HashMap<>();
@@ -35,33 +35,33 @@ public class CategoryReportMapper {
         }
 
         Set<CategoryReportDTO> resultCategories = categories.stream()
-            .peek(oldReport -> {
-                    List<CategorySpendDTO> spends = groupedReports.get(oldReport.getCategoryId());
-                    oldReport.setSpends(spends);
-                }
-            )
-            .collect(Collectors.toSet());
+                .peek(oldReport -> {
+                            List<CategorySpendDTO> spends = groupedReports.get(oldReport.getCategoryId());
+                            oldReport.setSpends(spends);
+                        }
+                )
+                .collect(Collectors.toSet());
 
         return CategorySpendReportDTO.builder()
-            .startDate(startDate)
-            .endDate(endDate)
-            .step(step)
-            .categories(resultCategories)
-            .build();
+                .startDate(startDate)
+                .endDate(endDate)
+                .step(step)
+                .categories(resultCategories)
+                .build();
     }
 
     private CategoryReportDTO toCategoryReportDTO(CategoryReportProjection report) {
         return CategoryReportDTO.builder()
-            .categoryId(report.getCategoryId())
-            .name(report.getCategoryName())
-            .spends(new ArrayList<>())
-            .build();
+                .categoryId(report.getCategoryId())
+                .name(report.getCategoryName())
+                .spends(new ArrayList<>())
+                .build();
     }
 
     private CategorySpendDTO toCategorySpendDTO(CategoryReportProjection categoryReport) {
         return CategorySpendDTO.builder()
-            .period(categoryReport.getPeriodStart())
-            .amount(categoryReport.getAmount())
-            .build();
+                .period(categoryReport.getPeriodStart())
+                .amount(categoryReport.getAmount())
+                .build();
     }
 }

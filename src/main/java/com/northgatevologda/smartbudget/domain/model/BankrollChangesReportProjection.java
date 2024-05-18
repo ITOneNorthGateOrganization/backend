@@ -5,7 +5,9 @@ import java.time.Instant;
 
 public interface BankrollChangesReportProjection {
     Integer getTransactionTypeId();
+
     Instant getPeriodStart();
+
     BigDecimal getAmount();
 
     Integer INCOME_TYPE_ID = 1;

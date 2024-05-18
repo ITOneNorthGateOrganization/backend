@@ -28,11 +28,11 @@ public class JpaCategoryReportAdapter implements CategoryReportRepositoryPort {
     public List<CategoryReportProjection> getReport(String username, Instant startDate, Instant endDate, Double step) {
         logger.info("Generating categories report: {} {} {} {}", username, startDate, endDate, step);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .withZone( ZoneId.systemDefault());
+                .withZone(ZoneId.systemDefault());
         return jpaCategoryReportRepository.getReport(
-            username,
-            formatter.format(startDate),
-            formatter.format(endDate),
-            BigDecimal.valueOf(step));
+                username,
+                formatter.format(startDate),
+                formatter.format(endDate),
+                BigDecimal.valueOf(step));
     }
 }
