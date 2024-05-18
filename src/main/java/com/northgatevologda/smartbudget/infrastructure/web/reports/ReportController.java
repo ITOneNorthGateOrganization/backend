@@ -1,6 +1,7 @@
 package com.northgatevologda.smartbudget.infrastructure.web.reports;
 
 import com.northgatevologda.smartbudget.application.service.reports.dto.BankrollChangesReportDTO;
+import com.northgatevologda.smartbudget.application.service.reports.dto.BudgetProportionsReportDTO;
 import com.northgatevologda.smartbudget.application.service.reports.dto.CategorySpendReportDTO;
 import com.northgatevologda.smartbudget.domain.ports.in.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,22 @@ public class ReportController {
                 step
             );
         
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/budgets")
+    public ResponseEntity<BudgetProportionsReportDTO> getBudgetProportionsReport(
+        @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date startDate,
+        @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date endDate
+    ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Generating budget implementation percentage report for user with username: {}", username);
+        BudgetProportionsReportDTO report =
+            reportService.getBudgetProportionsReport(
+                username,
+                startDate.toInstant(),
+                endDate.toInstant()
+            );
         return ResponseEntity.ok(report);
     }
 }
