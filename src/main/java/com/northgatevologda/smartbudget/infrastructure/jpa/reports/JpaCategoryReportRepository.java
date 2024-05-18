@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface JpaCategoryReportRepository extends JpaRepository<Category, Long> {
     @Query(
-        nativeQuery = true,
-        value = "SELECT id, category_id as categoryId, category_name as categoryName, period_start as periodStart, amount FROM get_categories_report(:username, :start_date, :end_date, :step)"
+            nativeQuery = true,
+            value = "SELECT id, category_id as categoryId, category_name as categoryName, period_start as periodStart, amount FROM get_categories_report(:username, :start_date, :end_date, :step)"
     )
     List<CategoryReportProjection> getReport(
-        @Param("username") String username,
-        @Param("start_date") String startDate,
-        @Param("end_date") String endDate,
-        @Param("step") BigDecimal step
+            @Param("username") String username,
+            @Param("start_date") String startDate,
+            @Param("end_date") String endDate,
+            @Param("step") BigDecimal step
     );
 }

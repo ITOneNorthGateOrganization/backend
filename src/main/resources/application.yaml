@@ -31,3 +31,5 @@ management:
     metrics:
       export:
         enabled: true
+server:
+  port: 8080
