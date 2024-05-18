@@ -27,12 +27,12 @@ public class JpaBankrollChangesReportAdapter implements BankrollChangesRepositor
     public List<BankrollChangesReportProjection> getReport(String username, Instant startDate, Instant endDate, Double step) {
         logger.info("Generating bankroll changes report: {} {} {} {}", username, startDate, endDate, step);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .withZone( ZoneId.systemDefault());
+                .withZone(ZoneId.systemDefault());
         return jpaBankrollChangesReportRepository.getReport(
-            username,
-            formatter.format(startDate),
-            formatter.format(endDate),
-            BigDecimal.valueOf(step)
+                username,
+                formatter.format(startDate),
+                formatter.format(endDate),
+                BigDecimal.valueOf(step)
         );
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 public interface CategoryReportRepositoryPort {
     /**
      * Generate report about user's category spends
+     *
      * @param username  Username
      * @param startDate Start date of period
      * @param endDate   End date of period
