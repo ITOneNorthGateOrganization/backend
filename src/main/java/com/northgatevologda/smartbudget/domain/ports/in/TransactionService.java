@@ -14,11 +14,10 @@ public interface TransactionService {
      * Save a new transaction for the specified user and account.
      *
      * @param username       The username of the user.
-     * @param accountId      The ID of the account.
      * @param transactionDTO The DTO object containing the details of the transaction to save.
      * @return The saved transaction.
      */
-    Transaction save(String username, Long accountId, TransactionDTO transactionDTO);
+    Transaction save(String username, TransactionDTO transactionDTO);
 
     /**
      * Find a transaction by its ID.

@@ -31,7 +31,7 @@ public class BudgetProportionsReportMapper {
                     .amount(projection.getAmount())
                     .percent(percent)
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
 
         return BudgetProportionsReportDTO.builder()
                 .startDate(startDate)

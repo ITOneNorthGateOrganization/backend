@@ -47,6 +47,6 @@ public class BankrollChangesReportMapper {
                         .period(projection.getPeriodStart())
                         .amount(projection.getAmount())
                         .build()
-        ).collect(Collectors.toList());
+        ).toList();
     }
 }

@@ -11,6 +11,14 @@ import java.util.List;
 public interface AccountService {
 
     /**
+     * Update the account information.
+     *
+     * @param account The account object to be updated.
+     * @return The updated account object.
+     */
+    Account update(Account account);
+
+    /**
      * Find all accounts associated with the given username.
      *
      * @param username The username of the user whose accounts to find.

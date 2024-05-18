@@ -40,8 +40,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findAccountByUserIdAndAccountId(Long userId, Long accountId) {
+        logger.info("Finding accounts by user id: {} and account id: {}", userId, accountId);
         return accountRepositoryPort.findAccountByUserIdAndAccountId(userId, accountId)
                 .orElseThrow(() -> new NotFoundException("The account was not found by id " + accountId));
+    }
+
+    @Override
+    public Account update(Account account) {
+        logger.info("Updating account: {}", account);
+        return accountRepositoryPort.save(account);
     }
 
     @Override
