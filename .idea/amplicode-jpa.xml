@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmplicodeJpaIdeaProjectConfig">
+    <option name="defaultUnitInitialized" value="true" />
+    <option name="renamerInitialized" value="true" />
+    <option name="reverseEngineeringLastDbConnectionId" value="8b3efbbe-db33-489a-b09e-bb95bcfc9ea2" />
+    <option name="reLastEntityCreationPackage" value="src/main/java/com/northgatevologda/smartbudget/domain/model" />
+    <option name="newEntityIdType" value="Long" />
+    <option name="newEntityIdStrategy" value="Identity" />
+  </component>
+</project>

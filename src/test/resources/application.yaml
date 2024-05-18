@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 1111
+  jpa:
+    hibernate.ddl-auto: create-drop
+    show-sql: true
+
+smartbudget:
+  app:
+    jwtSecret: ${JWT_SECRET}
+    jwtExpirationMs: ${JWT_EXPIRATION_MS}
+    jwtRefreshExpirationMs: ${JWT_REFRESH_EXPIRATION_MS}
