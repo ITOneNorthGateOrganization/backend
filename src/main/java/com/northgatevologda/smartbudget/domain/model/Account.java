@@ -29,8 +29,8 @@ public class Account {
     @Column(name = "open", nullable = false)
     private Boolean open;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "bank_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bank_id")
     private Bank bank;
 
     @UpdateTimestamp
