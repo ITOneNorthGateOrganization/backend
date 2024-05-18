@@ -60,6 +60,7 @@ public class JpaBudgetRepositoryAdapter implements BudgetRepositoryPort {
     @Override
     public void delete(Long budgetId) {
         logger.info("Deleting budget with ID: {}", budgetId);
+        jpaBudgetRepository.deleteBudgetCategoriesByBudgetId(budgetId);
         jpaBudgetRepository.deleteBudgetById(budgetId);
     }
 }
