@@ -33,7 +33,7 @@ public class TransactionController {
     private final TransactionControllerMapper transactionControllerMapper;
     private final TransactionServiceMapper transactionServiceMapper;
 
-    @PostMapping(value = "/accounts/{accountId}/transactions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/accounts/transactions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create a transaction for a specific account",
             description = "Creates and records a new financial transaction under a specific account for the authenticated user",
             responses = {
@@ -44,15 +44,13 @@ public class TransactionController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             })
     public ResponseEntity<TransactionDTO> createTransaction(
-            @Parameter(description = "Account ID for which the transaction is to be created", required = true)
-            @PathVariable Long accountId,
             @Parameter(description = "Transaction creation request data", required = true)
             @Valid @RequestBody CreateTransactionRequest createTransactionRequest
     ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        logger.info("Creating transaction for user with username: {}, account ID: {}", username, accountId);
+        logger.info("Creating transaction for user with username: {}", username);
         TransactionDTO transactionDTO = transactionControllerMapper.toTransactionDTO(createTransactionRequest);
-        Transaction createdTransaction = transactionService.save(username, accountId, transactionDTO);
+        Transaction createdTransaction = transactionService.save(username, transactionDTO);
         logger.info("Transaction created successfully");
         return ResponseEntity.ok(transactionServiceMapper.toDTO(createdTransaction));
     }

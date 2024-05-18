@@ -2,6 +2,8 @@ package com.northgatevologda.smartbudget.application.service.transaction;
 
 import com.northgatevologda.smartbudget.application.service.transaction.dto.TransactionDTO;
 import com.northgatevologda.smartbudget.application.service.transaction.mapper.TransactionServiceMapper;
+import com.northgatevologda.smartbudget.domain.enums.ETransactionType;
+import com.northgatevologda.smartbudget.domain.exception.BadRequestException;
 import com.northgatevologda.smartbudget.domain.exception.ForbiddenException;
 import com.northgatevologda.smartbudget.domain.exception.NotFoundException;
 import com.northgatevologda.smartbudget.domain.model.*;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -46,21 +49,72 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction save(String username, Long accountId, TransactionDTO transactionDTO) {
-        logger.info("Creating transaction for user with username: {}, account ID: {}", username, accountId);
+    public Transaction save(String username, TransactionDTO transactionDTO) {
+        logger.info("Creating transaction for user with username: {}", username);
         User foundUser = userService.findByUsername(username);
-        Account foundAccount = accountService.findAccountByUserIdAndAccountId(foundUser.getId(), accountId);
         TransactionType transactionType = transactionTypeService.findById(transactionDTO.getTransactionTypeId());
         Transaction transactionForCreate = transactionServiceMapper.toEntity(transactionDTO);
-        transactionForCreate.setAccount(foundAccount);
-        transactionForCreate.setCreatedAt(Instant.now());
-        transactionForCreate.setDescription(transactionDTO.getDescription());
-        transactionForCreate.setReceiverId(transactionDTO.getReceiverId());
-        transactionForCreate.setSenderId(transactionDTO.getSenderId());
+        Long receiverAccountId = transactionDTO.getReceiverId();
+        Long senderAccountId = transactionDTO.getSenderId();
+        if (transactionType.getId() == ETransactionType.REPLENISHMENT.getId()) {
+            Account receiverAccount = accountService
+                    .findAccountByUserIdAndAccountId(foundUser.getId(), receiverAccountId);
+            processReplenishmentTransaction(transactionForCreate, receiverAccount);
+        } else if (transactionType.getId() == ETransactionType.EXPENDITURE.getId()) {
+            Account senderAccount = accountService
+                    .findAccountByUserIdAndAccountId(foundUser.getId(), senderAccountId);
+            processExpenditureTransaction(transactionForCreate, senderAccount);
+        } else if (transactionType.getId() == ETransactionType.TRANSLATION.getId()) {
+            Account senderAccount = accountService
+                    .findAccountByUserIdAndAccountId(foundUser.getId(), senderAccountId);
+            Account receiverAccount = accountService.findAccountById(receiverAccountId);
+            processTranslationTransaction(transactionForCreate, senderAccount, receiverAccount);
+        } else {
+            throw new BadRequestException("An unknown transaction type has been transmitted");
+        }
         transactionForCreate.setTransactionType(transactionType);
+        transactionForCreate.setCreatedAt(Instant.now());
         Transaction createdTransaction = transactionRepositoryPort.save(transactionForCreate);
         logger.info("Transaction created successfully");
         return createdTransaction;
+    }
+
+    private void processReplenishmentTransaction(Transaction transaction, Account receiverAccount) {
+        BigDecimal receiverBalance = receiverAccount.getBalance().add(transaction.getAmount());
+        transaction.setReceiverBalance(receiverBalance);
+        transaction.setAccount(receiverAccount);
+        receiverAccount.setBalance(receiverBalance);
+        accountService.update(receiverAccount);
+    }
+
+    private void processExpenditureTransaction(Transaction transaction, Account senderAccount) {
+        if (senderAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
+            throw new BadRequestException("You cannot create a transaction whose amount exceeds the account balance");
+        }
+        BigDecimal senderBalance = senderAccount.getBalance().subtract(transaction.getAmount());
+        transaction.setSenderBalance(senderBalance);
+        transaction.setAccount(senderAccount);
+        senderAccount.setBalance(senderBalance);
+        accountService.update(senderAccount);
+    }
+
+    private void processTranslationTransaction(
+            Transaction transaction,
+            Account senderAccount,
+            Account receiverAccount
+    ) {
+        if (senderAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
+            throw new BadRequestException("You cannot create a transaction whose amount exceeds the account balance");
+        }
+        BigDecimal senderBalance = senderAccount.getBalance().subtract(transaction.getAmount());
+        BigDecimal receiverBalance = receiverAccount.getBalance().add(transaction.getAmount());
+        senderAccount.setBalance(senderBalance);
+        receiverAccount.setBalance(receiverBalance);
+        transaction.setSenderBalance(senderBalance);
+        transaction.setReceiverBalance(receiverBalance);
+        transaction.setAccount(senderAccount);
+        accountService.update(senderAccount);
+        accountService.update(receiverAccount);
     }
 
     @Override
