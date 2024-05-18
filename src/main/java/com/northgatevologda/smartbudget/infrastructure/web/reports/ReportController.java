@@ -1,5 +1,6 @@
 package com.northgatevologda.smartbudget.infrastructure.web.reports;
 
+import com.northgatevologda.smartbudget.application.service.reports.dto.BankrollChangesReportDTO;
 import com.northgatevologda.smartbudget.application.service.reports.dto.CategorySpendReportDTO;
 import com.northgatevologda.smartbudget.domain.ports.in.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,33 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("/categories")
-    public ResponseEntity<CategorySpendReportDTO> findAccounts(
-            @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date startDate,
-            @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date endDate,
-            @RequestParam(value = "step") Double step
+    public ResponseEntity<CategorySpendReportDTO> getCategorySpendReport(
+        @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date startDate,
+        @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date endDate,
+        @RequestParam(value = "step") Double step
     ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         logger.info("Generating categories report for user with username: {}", username);
         CategorySpendReportDTO report =
             reportService.getCategoriesReport(
+                username,
+                startDate.toInstant(),
+                endDate.toInstant(),
+                step
+            );
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/accounts")
+    public ResponseEntity<BankrollChangesReportDTO> getBankrollChangesReport(
+        @RequestParam(value = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date startDate,
+        @RequestParam(value = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date endDate,
+        @RequestParam(value = "step") Double step
+    ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Generating report about bankroll changes for user with username: {}", username);
+        BankrollChangesReportDTO report =
+            reportService.getBankrollChangesReport(
                 username,
                 startDate.toInstant(),
                 endDate.toInstant(),
