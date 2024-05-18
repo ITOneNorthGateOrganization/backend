@@ -20,7 +20,6 @@ public class AccountControllerMapper {
         return AccountDTO.builder()
                 .balance(accountCreateRequest.getBalance())
                 .name(accountCreateRequest.getName())
-                .open(accountCreateRequest.getOpen())
                 .build();
     }
 }

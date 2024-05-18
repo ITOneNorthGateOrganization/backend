@@ -4,14 +4,8 @@ import com.northgatevologda.smartbudget.application.service.budget.dto.BudgetDTO
 import com.northgatevologda.smartbudget.domain.exception.BadRequestException;
 import com.northgatevologda.smartbudget.domain.exception.ForbiddenException;
 import com.northgatevologda.smartbudget.domain.exception.NotFoundException;
-import com.northgatevologda.smartbudget.domain.model.Budget;
-import com.northgatevologda.smartbudget.domain.model.BudgetImplementation;
-import com.northgatevologda.smartbudget.domain.model.TransactionRecord;
-import com.northgatevologda.smartbudget.domain.model.User;
-import com.northgatevologda.smartbudget.domain.ports.in.BudgetImplementationService;
-import com.northgatevologda.smartbudget.domain.ports.in.BudgetService;
-import com.northgatevologda.smartbudget.domain.ports.in.TransactionRecordService;
-import com.northgatevologda.smartbudget.domain.ports.in.UserService;
+import com.northgatevologda.smartbudget.domain.model.*;
+import com.northgatevologda.smartbudget.domain.ports.in.*;
 import com.northgatevologda.smartbudget.domain.ports.out.BudgetRepositoryPort;
 import com.northgatevologda.smartbudget.infrastructure.utils.CronDateUtils;
 import org.slf4j.Logger;
@@ -34,16 +28,19 @@ public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepositoryPort budgetRepositoryPort;
     private final UserService userService;
     private final TransactionRecordService transactionRecordService;
+    private final CategoryService categoryService;
 
     public BudgetServiceImpl(
             BudgetImplementationService budgetImplementationService,
             BudgetRepositoryPort budgetRepositoryPort,
             UserService userService,
+            CategoryService categoryService,
             @Lazy TransactionRecordService transactionRecordService
     ) {
         this.budgetImplementationService = budgetImplementationService;
         this.budgetRepositoryPort = budgetRepositoryPort;
         this.userService = userService;
+        this.categoryService = categoryService;
         this.transactionRecordService = transactionRecordService;
     }
 
@@ -156,10 +153,11 @@ public class BudgetServiceImpl implements BudgetService {
             throw new ForbiddenException("It is forbidden to tie categories to someone else's budget");
         }
         for (Long categoryId : categoriesId) {
-            if (budgetRepositoryPort.checkTieUppedCategory(budgetId, categoryId)) {
+            Category foundCategory = categoryService.findCategoryById(categoryId);
+            if (budgetRepositoryPort.checkTieUppedCategory(budgetId, foundCategory.getId())) {
                 continue;
             }
-            budgetRepositoryPort.tieUpCategory(budgetId, categoryId);
+            budgetRepositoryPort.tieUpCategory(budgetId, foundCategory.getId());
         }
     }
 
