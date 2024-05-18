@@ -37,6 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
                     .forEveryone(false)
                     .build();
             categoryEntity = categoryRepositoryPort.save(categoryForSave);
+            categoryRepositoryPort.tieUpCategoryToUser(categoryEntity.getId(), foundUser.getId());
         } else {
             if (notExistsCategoryByIdForUserId(categoryEntity.getId(), foundUser.getId())) {
                 categoryRepositoryPort.tieUpCategoryToUser(categoryEntity.getId(), foundUser.getId());
