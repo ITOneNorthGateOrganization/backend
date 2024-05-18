@@ -1,6 +1,7 @@
 package com.northgatevologda.smartbudget.domain.ports.in;
 
 import com.northgatevologda.smartbudget.application.service.reports.dto.BankrollChangesReportDTO;
+import com.northgatevologda.smartbudget.application.service.reports.dto.BudgetProportionsReportDTO;
 import com.northgatevologda.smartbudget.application.service.reports.dto.CategorySpendReportDTO;
 
 import java.time.Instant;
@@ -29,4 +30,13 @@ public interface ReportService {
      * @return BankrollChangesReportDTO
      */
     BankrollChangesReportDTO getBankrollChangesReport(String username, Instant startDate, Instant endDate, Double step);
+
+    /**
+     * Returns the budget implementation percentage report
+     * @param username
+     * @param startDate
+     * @param endDate
+     * @return BudgetProportionsReportDTO
+     */
+    BudgetProportionsReportDTO getBudgetProportionsReport(String username, Instant startDate, Instant endDate);
 }
