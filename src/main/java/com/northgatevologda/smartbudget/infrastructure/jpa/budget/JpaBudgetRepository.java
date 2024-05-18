@@ -4,6 +4,7 @@ import com.northgatevologda.smartbudget.domain.model.Budget;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +17,13 @@ public interface JpaBudgetRepository extends JpaRepository<Budget, Long> {
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true, value = """
-        DELETE FROM budget_category WHERE budget_id = :id;
-        DELETE FROM budget WHERE id = :id;
-    """)
-    void deleteBudgetById(Long id);
+    @Query(nativeQuery = true, value = "DELETE FROM budget_category WHERE budget_id = :id")
+    void deleteBudgetCategoriesByBudgetId(@Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "DELETE FROM budget WHERE id = :id")
+    void deleteBudgetById(@Param("id") Long id);
 
     @Transactional
     @Modifying
