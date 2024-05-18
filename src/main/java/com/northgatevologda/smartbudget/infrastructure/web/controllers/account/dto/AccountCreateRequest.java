@@ -14,7 +14,5 @@ public class AccountCreateRequest {
     @NotNull
     private BigDecimal balance;
     @NotNull
-    private Boolean open;
-    @NotNull
     private String name;
 }
