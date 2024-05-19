@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Mapper class for ReportService that converts entities to DTO objects.
@@ -34,19 +33,16 @@ public class CategoryReportMapper {
             categories.add(toCategoryReportDTO(report));
         }
 
-        Set<CategoryReportDTO> resultCategories = categories.stream()
-                .peek(oldReport -> {
-                            List<CategorySpendDTO> spends = groupedReports.get(oldReport.getCategoryId());
-                            oldReport.setSpends(spends);
-                        }
-                )
-                .collect(Collectors.toSet());
+        for (CategoryReportDTO oldReport : categories) {
+            List<CategorySpendDTO> spends = groupedReports.get(oldReport.getCategoryId());
+            oldReport.setSpends(spends);
+        }
 
         return CategorySpendReportDTO.builder()
                 .startDate(startDate)
                 .endDate(endDate)
                 .step(step)
-                .categories(resultCategories)
+                .categories(categories)
                 .build();
     }
 
