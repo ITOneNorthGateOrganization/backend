@@ -14,7 +14,7 @@ import java.time.Instant;
 public class AccountDTO {
     private Long id;
     private BigDecimal balance;
-    private Boolean open;
+    private boolean open;
     private Instant updateAt;
     private String name;
 }

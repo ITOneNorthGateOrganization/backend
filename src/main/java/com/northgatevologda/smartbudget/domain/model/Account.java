@@ -27,7 +27,7 @@ public class Account {
 
     @NotNull
     @Column(name = "open", nullable = false)
-    private Boolean open;
+    private boolean open;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bank_id")
