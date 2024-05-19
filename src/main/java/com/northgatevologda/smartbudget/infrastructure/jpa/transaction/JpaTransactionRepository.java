@@ -50,7 +50,7 @@ public interface JpaTransactionRepository extends JpaRepository<Transaction, Lon
                 WHERE
                     a.user_id = :userId
                     AND t1.transaction_type_id = 2 -- Расход
-                    AND EXISTS(
+                    AND NOT EXISTS(
                         SELECT
                             NULL
                         FROM
