@@ -11,6 +11,14 @@ import java.util.Optional;
 public interface CategoryRepositoryPort {
 
     /**
+     * Retrieves a list of categories associated with the specified budget ID.
+     *
+     * @param budgetId the ID of the budget for which categories are to be retrieved
+     * @return a list of {@link Category} objects associated with the specified budget ID
+     */
+    List<Category> findCategoriesByBudgetId(Long budgetId);
+
+    /**
      * Find categories based on visibility for everyone.
      *
      * @param forEveryone Boolean value indicating if the categories are set for everyone.
