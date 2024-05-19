@@ -22,7 +22,7 @@ public class AccountServiceMapper {
         return Account.builder()
                 .name(accountDTO.getName())
                 .balance(accountDTO.getBalance())
-                .open(accountDTO.getOpen())
+                .open(accountDTO.isOpen())
                 .updateAt(accountDTO.getUpdateAt())
                 .build();
     }
@@ -37,7 +37,7 @@ public class AccountServiceMapper {
         return AccountDTO.builder()
                 .id(account.getId())
                 .name(account.getName())
-                .open(account.getOpen())
+                .open(account.isOpen())
                 .balance(account.getBalance())
                 .updateAt(account.getUpdateAt())
                 .build();

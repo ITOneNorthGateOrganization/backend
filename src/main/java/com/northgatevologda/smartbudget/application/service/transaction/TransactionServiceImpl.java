@@ -65,10 +65,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void validateTransactionAccounts(TransactionDTO transactionDTO) {
         if (transactionDTO.getReceiverId() != null) {
-            checkExistsAccountById(transactionDTO.getReceiverId());
+            checkAccountById(transactionDTO.getReceiverId());
         }
         if (transactionDTO.getSenderId() != null) {
-            checkExistsAccountById(transactionDTO.getSenderId());
+            checkAccountById(transactionDTO.getSenderId());
         }
     }
 
@@ -106,8 +106,11 @@ public class TransactionServiceImpl implements TransactionService {
         return createdTransaction;
     }
 
-    private void checkExistsAccountById(Long accountId) {
-        accountService.findAccountById(accountId);
+    private void checkAccountById(Long accountId) {
+        Account account = accountService.findAccountById(accountId);
+        if (!account.isOpen()) {
+            throw new BadRequestException("Account with id " + accountId + " is not open");
+        }
     }
 
     private void processReplenishmentTransaction(Transaction transaction, Account receiverAccount) {

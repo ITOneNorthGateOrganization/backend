@@ -45,6 +45,19 @@ public interface JpaCategoryRepository extends JpaRepository<Category, Long> {
             """)
     List<Category> findCategoriesByUserId(Long userId);
 
+    @Query(nativeQuery = true, value = """
+                SELECT
+                    c.*
+                FROM
+                    category c
+                    INNER JOIN budget_category bc ON (
+                        c.id = bc.category_id
+                    )
+                WHERE
+                    bc.budget_id = :budgetId
+            """)
+    List<Category> findCategoriesByBudgetId(Long budgetId);
+
     @Transactional
     @Modifying
     @Query(value = "INSERT INTO user_category (user_id, category_id) VALUES (:userId, :categoryId)", nativeQuery = true)

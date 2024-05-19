@@ -10,6 +10,15 @@ import java.util.List;
 public interface CategoryService {
 
     /**
+     * Retrieves a list of categories associated with the specified budget ID and username.
+     *
+     * @param username the username whose budget categories are to be retrieved
+     * @param budgetId the ID of the budget for which categories are to be retrieved
+     * @return a list of {@link Category} objects associated with the specified username and budget ID
+     */
+    List<Category> findCategoriesByBudgetId(String username, Long budgetId);
+
+    /**
      * Save a new category for the given user.
      *
      * @param username The username of the user for whom to save the category.
