@@ -52,31 +52,62 @@ public class TransactionServiceImpl implements TransactionService {
     public Transaction save(String username, TransactionDTO transactionDTO) {
         logger.info("Creating transaction for user with username: {}", username);
         User foundUser = userService.findByUsername(username);
+        validateTransactionAccounts(transactionDTO);
+
         TransactionType transactionType = transactionTypeService.findById(transactionDTO.getTransactionTypeId());
-        Transaction transactionForCreate = transactionServiceMapper.toEntity(transactionDTO);
-        Long receiverAccountId = transactionDTO.getReceiverId();
-        Long senderAccountId = transactionDTO.getSenderId();
+        Transaction transactionForCreate = prepareTransaction(transactionDTO, transactionType);
+
+        processTransactionByType(foundUser, transactionForCreate);
+
+        transactionForCreate.setCreatedAt(Instant.now());
+        return createTransaction(transactionForCreate);
+    }
+
+    private void validateTransactionAccounts(TransactionDTO transactionDTO) {
+        if (transactionDTO.getReceiverId() != null) {
+            checkExistsAccountById(transactionDTO.getReceiverId());
+        }
+        if (transactionDTO.getSenderId() != null) {
+            checkExistsAccountById(transactionDTO.getSenderId());
+        }
+    }
+
+    private Transaction prepareTransaction(TransactionDTO transactionDTO, TransactionType transactionType) {
+        Transaction transaction = transactionServiceMapper.toEntity(transactionDTO);
+        transaction.setTransactionType(transactionType);
+        return transaction;
+    }
+
+    private void processTransactionByType(User foundUser, Transaction transaction) {
+        Long receiverAccountId = transaction.getReceiverId();
+        Long senderAccountId = transaction.getSenderId();
+        TransactionType transactionType = transaction.getTransactionType();
         if (transactionType.getId() == ETransactionType.REPLENISHMENT.getId()) {
             Account receiverAccount = accountService
                     .findAccountByUserIdAndAccountId(foundUser.getId(), receiverAccountId);
-            processReplenishmentTransaction(transactionForCreate, receiverAccount);
+            processReplenishmentTransaction(transaction, receiverAccount);
         } else if (transactionType.getId() == ETransactionType.EXPENDITURE.getId()) {
             Account senderAccount = accountService
                     .findAccountByUserIdAndAccountId(foundUser.getId(), senderAccountId);
-            processExpenditureTransaction(transactionForCreate, senderAccount);
+            processExpenditureTransaction(transaction, senderAccount);
         } else if (transactionType.getId() == ETransactionType.TRANSLATION.getId()) {
             Account senderAccount = accountService
                     .findAccountByUserIdAndAccountId(foundUser.getId(), senderAccountId);
             Account receiverAccount = accountService.findAccountById(receiverAccountId);
-            processTranslationTransaction(transactionForCreate, senderAccount, receiverAccount);
+            processTranslationTransaction(transaction, senderAccount, receiverAccount);
         } else {
             throw new BadRequestException("An unknown transaction type has been transmitted");
         }
-        transactionForCreate.setTransactionType(transactionType);
-        transactionForCreate.setCreatedAt(Instant.now());
-        Transaction createdTransaction = transactionRepositoryPort.save(transactionForCreate);
+    }
+
+    private Transaction createTransaction(Transaction transaction) {
+        Transaction createdTransaction = transactionRepositoryPort.save(transaction);
         logger.info("Transaction created successfully");
         return createdTransaction;
+    }
+
+    private void checkExistsAccountById(Long accountId) {
+        accountService.findAccountById(accountId);
     }
 
     private void processReplenishmentTransaction(Transaction transaction, Account receiverAccount) {
