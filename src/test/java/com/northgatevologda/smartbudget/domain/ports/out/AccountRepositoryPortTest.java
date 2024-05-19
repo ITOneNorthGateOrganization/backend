@@ -93,7 +93,7 @@ class AccountRepositoryPortTest {
 
     private void checkAccounts(Account account1, Account account2) {
         assertEquals(account1.getName(), account2.getName());
-        assertEquals(account1.getOpen(), account2.getOpen());
+        assertEquals(account1.isOpen(), account2.isOpen());
         assertEquals(account1.getUpdateAt(), account2.getUpdateAt());
         assertEquals(account1.getBalance(), account2.getBalance());
     }

@@ -34,7 +34,7 @@ public class BudgetServiceImpl implements BudgetService {
             BudgetImplementationService budgetImplementationService,
             BudgetRepositoryPort budgetRepositoryPort,
             UserService userService,
-            CategoryService categoryService,
+            @Lazy CategoryService categoryService,
             @Lazy TransactionRecordService transactionRecordService
     ) {
         this.budgetImplementationService = budgetImplementationService;

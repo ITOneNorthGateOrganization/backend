@@ -53,12 +53,31 @@ public class CategoryController {
             description = "Retrieves all categories associated with the authenticated user",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Categories retrieved successfully"),
+                    @ApiResponse(responseCode = "404", description = "Categories not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             })
     public ResponseEntity<List<CategoryDTO>> findCategoriesByUsername() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         logger.info("Finding all categories for user with username: {}", username);
         List<Category> categories = categoryService.findCategoriesByUsername(username);
+        return ResponseEntity.ok(categoryServiceMapper.toDTOList(categories));
+    }
+
+    @GetMapping(value = "/categories/{budgetId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Find all categories for the user by budget id",
+            description = "Retrieves all categories associated with the authenticated user and budget id",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Categories retrieved successfully"),
+                    @ApiResponse(responseCode = "404", description = "Categories not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            })
+    public ResponseEntity<List<CategoryDTO>> findCategoriesByUsername(
+            @Parameter(description = "budget id", required = true)
+            @PathVariable Long budgetId
+    ) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("Finding all categories for user with username: {} and for budget with id: {}", username, budgetId);
+        List<Category> categories = categoryService.findCategoriesByBudgetId(username, budgetId);
         return ResponseEntity.ok(categoryServiceMapper.toDTOList(categories));
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface JpaBudgetRepository extends JpaRepository<Budget, Long> {
     List<Budget> findBudgetsByUserId(Long userId);
+
     List<Budget> findBudgetsByClose(boolean close);
 
     @Transactional

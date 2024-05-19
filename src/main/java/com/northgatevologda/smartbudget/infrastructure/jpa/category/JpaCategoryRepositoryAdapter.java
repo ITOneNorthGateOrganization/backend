@@ -21,6 +21,12 @@ public class JpaCategoryRepositoryAdapter implements CategoryRepositoryPort {
     private final JpaCategoryRepository jpaCategoryRepository;
 
     @Override
+    public List<Category> findCategoriesByBudgetId(Long budgetId) {
+        logger.info("Finding categories by budget id: {}", budgetId);
+        return jpaCategoryRepository.findCategoriesByBudgetId(budgetId);
+    }
+
+    @Override
     public boolean notExistsCategoryByIdForUserId(Long id, Long userId) {
         boolean notExistsCategory = !jpaCategoryRepository.existsCategoryByIdForUserId(id, userId);
         logger.info("Checking if category with ID {} exists for user with ID {}: {}", id, userId, notExistsCategory);

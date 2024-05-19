@@ -3,14 +3,16 @@ package com.northgatevologda.smartbudget.application.service.category;
 import com.northgatevologda.smartbudget.domain.exception.BadRequestException;
 import com.northgatevologda.smartbudget.domain.exception.ForbiddenException;
 import com.northgatevologda.smartbudget.domain.exception.NotFoundException;
+import com.northgatevologda.smartbudget.domain.model.Budget;
 import com.northgatevologda.smartbudget.domain.model.Category;
 import com.northgatevologda.smartbudget.domain.model.User;
+import com.northgatevologda.smartbudget.domain.ports.in.BudgetService;
 import com.northgatevologda.smartbudget.domain.ports.in.CategoryService;
 import com.northgatevologda.smartbudget.domain.ports.in.UserService;
 import com.northgatevologda.smartbudget.domain.ports.out.CategoryRepositoryPort;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,13 +20,33 @@ import java.util.List;
 /**
  * Implementation of {@link CategoryService}
  */
-@RequiredArgsConstructor
 @Component
 public class CategoryServiceImpl implements CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     private final CategoryRepositoryPort categoryRepositoryPort;
     private final UserService userService;
+    private final BudgetService budgetService;
+
+    public CategoryServiceImpl(
+            CategoryRepositoryPort categoryRepositoryPort,
+            UserService userService,
+            @Lazy BudgetService budgetService
+    ) {
+        this.categoryRepositoryPort = categoryRepositoryPort;
+        this.userService = userService;
+        this.budgetService = budgetService;
+    }
+
+    @Override
+    public List<Category> findCategoriesByBudgetId(String username, Long budgetId) {
+        logger.info("Finding categories by budget id: {}", budgetId);
+        Budget budget = budgetService.findBudgetById(budgetId);
+        if (!budget.getUser().getUsername().equals(username)) {
+            throw new BadRequestException("You can't get categories from someone else's budget");
+        }
+        return categoryRepositoryPort.findCategoriesByBudgetId(budgetId);
+    }
 
     @Override
     public Category save(String username, String category) {
